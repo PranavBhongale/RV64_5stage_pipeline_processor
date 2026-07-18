@@ -1,0 +1,16 @@
+{
+  "sigasi.enableTalkback": true,
+  "sigasi.enableUvmLinting": false,
+  "sigasi.useCommunityEdition": true,
+  "sigasi.emailAddress": "bhongalepranav18@gmail.com",
+  "sigasi.pathToLicense": "",
+  "sigasi.editor.codeLens.openBlockDiagram": false,
+  "sigasi.editor.codeLens.openClassHierarchy": false,
+  "sigasi.editor.codeLens.openStateMachinesDiagram": false,
+  "sigasi.editor.codeLens.openUvmDiagram": false,
+  "sigasi.editor.codeLens.revealInTarget": false,
+  "sigasi.editor.codeLens.setAsDesignHierarchyTop": false,
+  "sigasi.editor.codeLens.setAsUvmTopologyRoot": false,
+  "sigasi.editor.inlayHints.jumpToState": false,
+  "sigasi.editor.previewReadonlyFileOperations": true
+}

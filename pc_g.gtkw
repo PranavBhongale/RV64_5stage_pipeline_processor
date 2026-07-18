@@ -1,0 +1,55 @@
+[*]
+[*] GTKWave Analyzer v3.3.118 (w)1999-2023 BSI
+[*] Tue Jun 23 07:22:20 2026
+[*]
+[dumpfile] "C:\Users\Netizens\Documents\SV_Project\5StageRV64_processor\waveforms\pc.vcd"
+[dumpfile_mtime] "Tue Jun 23 07:07:08 2026"
+[dumpfile_size] 13047
+[savefile] "C:\Users\Netizens\Documents\SV_Project\5StageRV64_processor\pc_g.gtkw"
+[timestart] 161000
+[size] 1366 697
+[pos] -35 -35
+*-13.000000 194210 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] pc_generation_tb.
+[treeopen] pc_generation_tb.dut.
+[treeopen] pc_generation_tb.dut.u_branch_logic.
+[sst_width] 174
+[signals_width] 182
+[sst_expanded] 1
+[sst_vpaned_height] 191
+@22
+pc_generation_tb.pc[63:0]
+@28
+pc_generation_tb.dut.prediction_taken
+pc_generation_tb.dut.update_enable
+pc_generation_tb.dut.u_branch_logic.btb_hit
+pc_generation_tb.dut.u_branch_logic.branch_taken
+pc_generation_tb.dut.u_branch_logic.predict_taken
+@22
+pc_generation_tb.dut.u_branch_logic.btb_target[63:0]
+@28
+pc_generation_tb.dut.u_branch_logic.update_en
+@22
+pc_generation_tb.dut.u_branch_logic.btb_target[63:0]
+pc_generation_tb.dut.u_branch_logic.btb_inst.update_target[63:0]
+pc_generation_tb.dut.u_branch_logic.btb_inst.query_pc[63:0]
+@28
+pc_generation_tb.dut.u_branch_logic.btb_inst.hit
+pc_generation_tb.dut.u_branch_logic.btb_inst.taken
+@22
+pc_generation_tb.dut.u_branch_logic.btb_inst.target[63:0]
+pc_generation_tb.dut.u_branch_logic.btb_inst.update_target[63:0]
+pc_generation_tb.dut.u_branch_logic.btb_inst.btb_array[0][130:0]
+pc_generation_tb.dut.u_branch_logic.btb_inst.btb_array[1][130:0]
+pc_generation_tb.dut.u_branch_logic.btb_inst.btb_array[2][130:0]
+pc_generation_tb.dut.u_branch_logic.btb_inst.btb_array[3][130:0]
+pc_generation_tb.dut.u_branch_logic.btb_inst.btb_array[4][130:0]
+pc_generation_tb.dut.u_branch_logic.btb_inst.update_pc[63:0]
+@28
+pc_generation_tb.dut.u_branch_logic.btb_inst.update_taken
+@22
+pc_generation_tb.dut.u_branch_logic.btb_inst.target[63:0]
+@23
+pc_generation_tb.dut.u_branch_logic.btb_inst.update_target[63:0]
+[pattern_trace] 1
+[pattern_trace] 0

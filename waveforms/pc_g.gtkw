@@ -1,0 +1,29 @@
+[*]
+[*] GTKWave Analyzer v3.3.118 (w)1999-2023 BSI
+[*] Wed Jul 15 16:24:40 2026
+[*]
+[dumpfile] "C:\Users\Netizens\Documents\SV_Project\5StageRV64_processor\waveforms\waveforms\pc.vcd"
+[savefile] "C:\Users\Netizens\Documents\SV_Project\5StageRV64_processor\waveforms\pc_g.gtkw"
+[timestart] 58010
+[size] 1366 697
+[pos] -61 -61
+*-13.000000 76440 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] pc_generation_tb.
+[sst_width] 174
+[signals_width] 118
+[sst_expanded] 1
+[sst_vpaned_height] 191
+@28
+pc_generation_tb.clk
+[color] 1
+pc_generation_tb.pc_valid
+@24
+pc_generation_tb.PC[63:0]
+@28
+[color] 2
+pc_generation_tb.dut.rst_n
+pc_generation_tb.dut.fetch_ready
+@29
+pc_generation_tb.dut.flush
+[pattern_trace] 1
+[pattern_trace] 0
