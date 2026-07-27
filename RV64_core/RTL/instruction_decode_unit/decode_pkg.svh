@@ -1,4 +1,3 @@
-// =============================================================================
 //  decode_pkg.sv
 //  Package: all enum typedefs shared by the instruction decode unit and
 //           downstream pipeline stages.
@@ -6,15 +5,12 @@
 //  NOTE: ALU_OP is intentionally NOT defined here.
 //        It lives in your existing alu_op_pkg (or equivalent).
 //        Import that package wherever ALU_OP is needed.
-// =============================================================================
 `timescale 1ns/1ps
 package decode_pkg;
 
 
 
-    // -------------------------------------------------------------------------
     //  Instruction format types
-    // -------------------------------------------------------------------------
     typedef enum logic [2:0] {
         R_TYPE   = 3'd0,
         I_TYPE   = 3'd1,
@@ -30,9 +26,7 @@ package decode_pkg;
 
 
 
-    // -------------------------------------------------------------------------
     //  Memory operation
-    // -------------------------------------------------------------------------
      typedef enum logic [3:0] {
         MEM_NONE        = 4'd0,
         // Signed loads
@@ -51,9 +45,7 @@ package decode_pkg;
         STORE_DOUBLE    = 4'd11   // SD
     } mem_op_e;
 
-    // -------------------------------------------------------------------------
     //  Branch condition
-    // -------------------------------------------------------------------------
     typedef enum logic [2:0] {
         BR_NONE  = 3'd0,
         BR_BEQ   = 3'd1,
@@ -64,9 +56,7 @@ package decode_pkg;
         BR_BGEU  = 3'd6
     } branch_op_e;
 
-    // -------------------------------------------------------------------------
     //  CSR operation
-    // -------------------------------------------------------------------------
     typedef enum logic [2:0] {
         CSR_NONE  = 3'd0,
         CSR_CSRRW  = 3'd1,
@@ -77,9 +67,7 @@ package decode_pkg;
         CSR_CSRRCI = 3'd6
     } csr_op_e;
 
-    // -------------------------------------------------------------------------
     //  System / privileged operation
-    // -------------------------------------------------------------------------
     typedef enum logic [2:0] {
         SYS_NONE    = 3'd0,
         SYS_ECALL   = 3'd1,
@@ -91,10 +79,8 @@ package decode_pkg;
         SYS_WFI     = 3'd7
     } sys_op_e;
 
-    // -------------------------------------------------------------------------
     //  Decoded instruction bundle
     //  Passed as a single struct on the output bus.
-    // -------------------------------------------------------------------------
     typedef struct packed {
         // classification
         instr_type_e  instr_type;   // [2:0]
@@ -104,12 +90,8 @@ package decode_pkg;
         sys_op_e      sys_op;       // [2:0]
 
         // register addresses
-        logic [4:0]   rs1;         // FIX: was missing - required by instruction_decode.sv
-                                    // (dec.rs1) and register-file addressing in
-                                    // instruction_decode_top.sv (decoded_instr.rs1)
-        logic [4:0]   rs2;         // FIX: was missing - required by instruction_decode.sv
-                                    // (dec.rs2) and register-file addressing in
-                                    // instruction_decode_top.sv (decoded_instr.rs2)
+        logic [4:0]   rs1;
+        logic [4:0]   rs2;
         logic [4:0]   rd;
 
         // immediate (sign-extended 64-bit)
@@ -144,7 +126,3 @@ package decode_pkg;
 
 
 endpackage
-
-
-
-

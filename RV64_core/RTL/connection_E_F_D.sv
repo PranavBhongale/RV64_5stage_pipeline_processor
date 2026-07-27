@@ -9,15 +9,7 @@ module  connection_E_F_D #(
     input logic reg_write_en_in ,
     input logic [XLEN -1 : 0 ] reg_write_data_in ,
     input logic [4:0] reg_write_addr_in,
-
-    // Back-pressure from MEM/WB: the register file has a single write
-    // port, so when a memory-load result is landing this cycle the
-    // direct ALU/JAL(R) writeback path must stall one cycle.
     input logic writeback_ready_i,
-
-    // Load-use hazard feedback from MEM/WB: a load is currently in
-    // flight (its result hasn't landed yet). Decode must stall any
-    // instruction that needs this destination register.
     input logic       load_hazard_valid_i,
     input logic [4:0] load_hazard_rd_i,
 
@@ -138,27 +130,27 @@ decoding_pipeline # (
  execution_top #(
     .XLEN(XLEN)
 ) execution_top_M(
-    // ---- Global ----
+    //Global
    .clk(clk),
    .rst_n(rst_n),
-    // ---- Handshake from Decode stage ----
+    //Handshake from Decode stage
    .valid_decode(decoder_valid),
    .ready_execution_unit(ready_execution),
-    // ---- Operands forwarded from Decode / Register-File stage
+    //Operands forwarded from Decode / Register-File stage
    .rs1_data(rs1_connection),
     .rs2_data(rs2_connection),
-    // ---- Current PC (AUIPC, branch target, return address) ----
+    //Current PC (AUIPC, branch target, return address)
     .pc_in(pc_connection),
 
-    // ---- Decoded instruction bundle + ALU opcode ----
+    //Decoded instruction bundle + ALU opcode
     .decode_instruction(decoded_instr_wire),
     .alu_operation(alu_op_connection),
 
-    // ---- Branch resolution -> Fetch / Branch Control Unit ----
+    //Branch resolution -> Fetch / Branch Control Unit
     .branch_taken(branch_take),
     .branch_target(pc_target_from_execution),
     .pc_out(pc_for_pc_generation),
-    // ---- Handshake to Memory stage (loads & stores) ----
+    //Handshake to Memory stage (loads & stores)
      .valid_to_memory(req_valid_memory),
      .ready_memory(memory_ready),
      .req_addr_i(req_addr_o_memory),     // effective address (rs1 + imm)
@@ -167,18 +159,13 @@ decoding_pipeline # (
      .req_rd_i(req_rd_out),       // rd addr for load->WB path
      .req_is_load_i(req_is_load_out),
 
-    // ---- Handshake to Write-Back stage ----
+    // Handshake to Write-Back stage
            .valid_to_writeback(valid_o_reg),
            .ready_writeback(writeback_ready_i),
            .rd(write_reg),
            .write_data(write_data)      // ALU result or PC+4 (JAL/JALR)
 );
 
-// write_en simply mirrors "this cycle carries a valid direct
-// ALU / JAL(R) result destined for the register file".
-// (Previously this output was left undriven - it was wired to the
-//  ready_writeback *input* of execution_top instead of being assigned
-//  from a real source.)
 assign write_en = valid_o_reg;
 
 endmodule

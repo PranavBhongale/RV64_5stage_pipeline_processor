@@ -21,14 +21,6 @@ module alu_module #(
     assign b_signed = operand_b;
 
 
-
-    // FIX: was `always_latch`. The case statement below (with a default
-    // arm) already covers every alu_op value, so this is a fully
-    // combinational block - it must not synthesize as a latch, or the
-    // ALU result (and therefore every downstream forwarded value) can
-    // glitch/hold stale data instead of tracking operand_a/operand_b
-    // immediately.
-
     logic signed [31:0] result_1;
     logic signed [31:0] result_2;
     logic signed [31:0] result_3;

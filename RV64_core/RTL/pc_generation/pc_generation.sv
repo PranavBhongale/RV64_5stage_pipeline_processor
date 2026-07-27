@@ -9,7 +9,7 @@ module pc_generation #(
     input  logic            fetch_ready,
     output logic            pc_valid,
     // Correction inputs from pipeline stages
-    input  logic [XLEN-1:0] pc_from_execution,       // PC of the branch/jump instr in EX (BTB update key)
+    input  logic [XLEN-1:0] pc_from_execution,
     // Branch resolution from execute stage
     input  logic [XLEN-1:0] pc_target_exe,   // Resolved/correct branch target
     input  logic            branch_taken,     // EX: branch/jump was actually taken
@@ -54,29 +54,6 @@ module pc_generation #(
         .btb_hit      (btb_hit),
         .predict_taken(predict_taken_unused)
     );
-
-    // -----------------------------------------------------------------
-    // Redirect / flush decision
-    // -----------------------------------------------------------------
-    // NOTE (design simplification): correctly *skipping* the flush when
-    // the BTB already predicted this branch/jump right requires tagging
-    // the predicted target onto the instruction and carrying it, in
-    // lock-step, all the way through Decode and Execute so it can be
-    // compared against pc_target_exe in the very same cycle the branch
-    // resolves. That tag does not exist anywhere else in this RTL, and
-    // the previous code tried to fake it by comparing pc_target_exe
-    // against whatever instruction happened to be sitting in Decode at
-    // that moment (completely unrelated to the branch resolving in EX,
-    // and off by two pipeline stages) - a latent correctness bug, since
-    // a coincidental match could suppress a flush that was actually
-    // required.
-    //
-    // Until the predicted-target tag is threaded through the pipeline,
-    // we conservatively flush + redirect on every resolved taken
-    // branch/jump. This is always correct (never executes down a wrong
-    // path unrecovered); we still train the BTB on every resolution so
-    // that once this exact branch is fetched again, `predicted_pc`
-    // above already points at the right place.
     always_comb begin
         update_enable = branch_taken;
         redirect_pc   = pc_target_exe;
@@ -89,18 +66,6 @@ module pc_generation #(
             pc         <= '0;
             pc_valid   <= 1'b0;
         end else begin
-            // FIX: pc_valid used to pulse for exactly one cycle per new
-            // address and the stall branch re-copied the (already
-            // advanced) current_pc into pc. Together that meant a PC
-            // value could be silently replaced by the *next* one before
-            // fetch ever got a chance to accept it (e.g. while fetch's
-            // request was sitting in instruction memory's multi-cycle
-            // latency) - instructions were dropped mid-fetch. There is
-            // always a next address to offer once out of reset, so
-            // pc_valid simply stays high; `pc` (and `current_pc`) only
-            // change on cycles where `fetch_ready` says the previously
-            // offered address was actually accepted - otherwise they
-            // hold their value exactly as a valid/ready producer must.
             pc_valid <= 1'b1;
             if (fetch_ready) begin
                 pc <= current_pc;

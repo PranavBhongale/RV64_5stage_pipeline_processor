@@ -76,14 +76,6 @@ begin
             begin
 
                 responce_data_o <=
-                    // FIX: `instruction_memory` is a word-addressed array
-                    // (one 32-bit instruction per entry), but `address_reg`
-                    // holds a *byte* address (PC increments by 4 each
-                    // instruction). Indexing directly with the byte address
-                    // silently fetched the wrong instruction for every PC
-                    // that wasn't 0 (e.g. PC=4 pulled entry #4, the 5th
-                    // instruction, instead of entry #1, the 2nd). Divide by
-                    // 4 (drop the two byte-offset bits) to get the word index.
                     instruction_memory[address_reg[$clog2(INSTRUCTION_MEMORY_SIZE)+1:2]];
 
                 responce_valid_o <= 1'b1;

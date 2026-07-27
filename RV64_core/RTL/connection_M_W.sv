@@ -13,9 +13,6 @@ module connection_M_W #(
     output logic [XLEN-1 : 0 ] reg_write_data_in,
     output logic [4:0] reg_write_addr_in,          // FIX: was 1-bit -> truncated rd to a single bit
 
-    // Back-pressure to the EX stage: tells it whether the single
-    // register-file write port is free this cycle for a direct
-    // ALU / JAL(R) result (busy whenever a load response is landing).
     output logic writeback_ready_o,
 
     // Load-use hazard feedback to Decode: a load is currently in
@@ -71,16 +68,6 @@ memory_top #(
 // Always ready to accept memory response
 assign response_ready = 1'b1;
 
-// ---------------------------------------------------------------------
-// Load-use hazard tracker.
-//
-// The memory unit only supports one outstanding request at a time (it
-// simply de-asserts req_ready_o/asserts `busy` until the response is
-// consumed), so there is at most one in-flight load whose destination
-// register isn't valid yet. Decode must stall any instruction that
-// needs that register until the response lands - forwarding alone
-// can't help here since the value doesn't exist yet.
-// ---------------------------------------------------------------------
 logic       pending_load_valid;
 logic [4:0] pending_load_rd;
 
@@ -101,13 +88,6 @@ end
 assign load_hazard_valid_o = pending_load_valid;
 assign load_hazard_rd_o    = pending_load_rd;
 
-// ---------------------------------------------------------------------
-// Direct ALU / JAL(R) -> WB path (non-memory instructions).
-// This was previously completely missing: write_en/write_data/write_reg/
-// valid_o_reg came in from the Execute stage but were never connected to
-// anything, so no non-memory instruction (ADD, ADDI, AND, JAL, ...) ever
-// wrote its result back to the register file - only load results did.
-// ---------------------------------------------------------------------
 logic            alu_wb_en;
 logic [XLEN-1:0] alu_wb_data;
 logic [4:0]      alu_wb_addr;
@@ -124,15 +104,6 @@ writeback_unit #(
     .reg_write_addr_o(alu_wb_addr)
 );
 
-// ---------------------------------------------------------------------
-// Single write-port arbitration.
-// A memory-load response and a direct ALU writeback can be valid in the
-// same cycle (they belong to two different in-flight instructions, and
-// the memory unit has variable latency). The load response is the
-// older instruction in program order and is given priority; the direct
-// ALU path is stalled for a cycle via writeback_ready_o, which feeds
-// execution_top's existing ready_writeback handshake.
-// ---------------------------------------------------------------------
 assign writeback_ready_o = ~response_valid;
 
 assign reg_write_en_in   = response_valid ? 1'b1           : (alu_wb_en & valid_o_reg);

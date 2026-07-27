@@ -40,23 +40,22 @@ module fetch_top #(
         .clk                 (clk),
         .rst_n               (rst_n),
 
-        //---------------- PC Generator ----------------
         .pc_i                (pc_i),
         .pc_valid_i          (pc_valid_i),
         .pc_ready_o          (pc_ready_o),
 
-        //---------------- Decode Stage ----------------
+        // Decode Stage
         .pc_o                (pc_o),
         .instruction_o       (instruction_o),
         .valid_o             (valid_o),
         .ready_i             (ready_i),
 
-        //---------------- Memory Request --------------
+        // Memory Request
         .imem_req_valid_o    (imem_req_valid),
         .imem_req_ready_i    (imem_req_ready),
         .imem_addr_o         (imem_addr),
 
-        //---------------- Memory Response -------------
+        // Memory Response
         .imem_resp_valid_i   (imem_resp_valid),
         .imem_resp_ready_o   (imem_resp_ready),
         .imem_instruction_i  (imem_instruction)
@@ -70,12 +69,12 @@ module fetch_top #(
         .clk                (clk),
         .rst_n              (rst_n),
 
-        //---------------- Request channel -------------
+        // Request channel
         .req_valid_i        (imem_req_valid),
         .req_ready_o        (imem_req_ready),
         .req_addr_i         (imem_addr),
 
-        //---------------- Response channel ------------
+        // Response channel
         .responce_valid_o   (imem_resp_valid),
         .responce_ready_i   (imem_resp_ready),
         .responce_data_o    (imem_instruction)

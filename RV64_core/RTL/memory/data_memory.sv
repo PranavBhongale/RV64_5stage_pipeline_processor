@@ -162,32 +162,22 @@ end
 
                         if(!alignment_error_o)
                         begin
-
                             for(i=0;i<8;i++)
                             begin
-
                                 if(write_mask[i])
                                 begin
-
                                     memory[12'(addr_reg+{64'(i)})]
                                     <= write_data_reg[8*i +: 8];
 
                                 end
-
                             end
-
                         end
-
                         read_data_o <= '0;
-
                     end
-
                     // LOAD
                     else
                     begin
-
                         case(data_type_reg)
-
                             BYTE:
                                 read_data_o <=
                                     {56'b0, raw_data[7:0]};
@@ -207,33 +197,21 @@ end
                                 read_data_o <= '0;
 
                         endcase
-
                     end
 
                     resp_valid_o <= 1'b1;
-
                     // Response consumed
                     if(resp_valid_o && resp_ready_i)
                     begin
-
                         busy         <= 1'b0;
                         resp_valid_o <= 1'b0;
-
                     end
-
                 end
-
                 else
                 begin
-
                     delay_counter <= delay_counter + 1;
-
                 end
-
             end
-
         end
-
     end
-
 endmodule

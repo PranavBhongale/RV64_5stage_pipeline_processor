@@ -72,7 +72,7 @@ module memory_top #(
         endcase
     end
 
-    // ---------------- Process Write Data -------------
+    //  Process Write Data
     logic [XLEN-1:0] processed_wdata;
     logic            mem_read_en, mem_write_en;
 

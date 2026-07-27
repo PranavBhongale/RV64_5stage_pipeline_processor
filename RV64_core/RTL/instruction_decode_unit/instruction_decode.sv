@@ -1,4 +1,3 @@
-// =============================================================================
 //  instruction_decode.sv
 //
 //  RV64I + M-extension — PURELY COMBINATIONAL decode unit.
@@ -8,7 +7,7 @@
 //  The caller (top-level pipeline) owns all registers and handshake buffering.
 //
 //  Ports
-//  -----
+//
 //    in_valid        — upstream valid
 //    in_ready        — driven by this module = out_ready (pass-through)
 //    in_instruction  — 32-bit raw instruction
@@ -19,7 +18,6 @@
 //    out_decoded     — decoded_instr_t bundle
 //    out_alu_op      — alu_op_e (separate, from alu_op_pkg)
 //    out_pc          — = in_pc  (pass-through)
-// =============================================================================
 
 
 `timescale 1ns/1ps
@@ -27,14 +25,12 @@ import decode_pkg::*;
 import alu_pkg::*;
 
 module instruction_decode (
-    // ── Upstream ──────────────────────────────────────────────────────────────
     input  logic            in_valid,
     output logic            in_ready,
 
     input  logic [31:0]     in_instruction,
     input  logic [63:0]     in_pc,
 
-    // ── Downstream ────────────────────────────────────────────────────────────
     output logic            out_valid,
     input  logic            out_ready,
 
@@ -43,12 +39,10 @@ module instruction_decode (
     output logic [63:0]     out_pc
 );
 
-    // ── Valid/ready pass-through ──────────────────────────────────────────────
     assign out_valid = in_valid;
     assign in_ready  = out_ready;
     assign out_pc    = in_pc;
 
-    // ── Internal combinational wires ──────────────────────────────────────────
     decoded_instr_t  dec;
     alu_op_t         aop;
     logic            unknown;
@@ -56,9 +50,7 @@ module instruction_decode (
     assign out_decoded = dec;
     assign out_alu_op  = aop;
 
-    // =========================================================================
     //  Field extractors
-    // =========================================================================
     function automatic logic [6:0]  f_opcode (input logic [31:0] i); return i[6:0];   endfunction
     function automatic logic [4:0]  f_rd     (input logic [31:0] i); return i[11:7];  endfunction
     function automatic logic [2:0]  f_funct3 (input logic [31:0] i); return i[14:12]; endfunction
@@ -68,9 +60,7 @@ module instruction_decode (
     function automatic logic [11:0] f_csr    (input logic [31:0] i); return i[31:20]; endfunction
     function automatic logic [4:0]  f_zimm   (input logic [31:0] i); return i[19:15]; endfunction
 
-    // =========================================================================
     //  Immediate decoders — all sign-extended to 64 bits
-    // =========================================================================
     function automatic logic signed [63:0] imm_I (input logic [31:0] i);
         return {{52{i[31]}}, i[31:20]};
     endfunction
@@ -94,9 +84,7 @@ module instruction_decode (
         return {{43{i[31]}}, i[31], i[19:12], i[20], i[30:21], 1'b0};
     endfunction
 
-    // =========================================================================
     //  Opcode / funct7 constants
-    // =========================================================================
     localparam logic [6:0] OpcR       = 7'b011_0011;
     localparam logic [6:0] OpcRW      = 7'b011_1011;
     localparam logic [6:0] OpcIAlu    = 7'b001_0011;
@@ -114,12 +102,9 @@ module instruction_decode (
     localparam logic [6:0] Funct7M    = 7'b000_0001;  // M-extension
     localparam logic [6:0] Funct7Sub  = 7'b010_0000;  // SUB/SRA/SUBW/SRAW
 
-    // =========================================================================
     //  Main combinational decode
-    // =========================================================================
     always_comb begin
 
-        // ── Defaults ─────────────────────────────────────────────────────────
         dec         = '0;
         aop         = ALU_ADD;
         unknown     = 1'b0;
@@ -130,14 +115,11 @@ module instruction_decode (
         dec.csr_op     = CSR_NONE;
         dec.sys_op     = SYS_NONE;
 
-        // ── Opcode dispatch ───────────────────────────────────────────────────
         case (f_opcode(in_instruction))
 
-            // -----------------------------------------------------------------
             //  R-TYPE 64-bit
             //  RV64I: ADD SUB XOR OR AND SLL SRL SRA SLT SLTU
             //  M-ext: MUL MULH MULHSU MULHU DIV DIVU REM REMU
-            // -----------------------------------------------------------------
             OpcR: begin
                 dec.instr_type = R_TYPE;
                 dec.rs1        = f_rs1(in_instruction);
@@ -175,12 +157,6 @@ module instruction_decode (
                     endcase
                 end
             end
-
-            // -----------------------------------------------------------------
-            //  R-TYPE *W  (RV64 word-width variants)
-            //  RV64I: ADDW SUBW SLLW SRLW SRAW
-            //  M-ext: MULW DIVW DIVUW REMW REMUW
-            // -----------------------------------------------------------------
             OpcRW: begin
                 dec.instr_type = R_TYPE;
                 dec.rs1        = f_rs1(in_instruction);
@@ -211,10 +187,8 @@ module instruction_decode (
                 end
             end
 
-            // -----------------------------------------------------------------
             //  I-TYPE ALU 64-bit
             //  ADDI XORI ORI ANDI SLTI SLTIU SLLI SRLI SRAI
-            // -----------------------------------------------------------------
             OpcIAlu: begin
                 dec.instr_type = I_TYPE;
                 dec.rs1        = f_rs1(in_instruction);
@@ -246,10 +220,8 @@ module instruction_decode (
                 endcase
             end
 
-            // -----------------------------------------------------------------
             //  I-TYPE ALU *W
             //  ADDIW SLLIW SRLIW SRAIW
-            // -----------------------------------------------------------------
             OpcIAluW: begin
                 dec.instr_type = I_TYPE;
                 dec.rs1        = f_rs1(in_instruction);
@@ -276,10 +248,8 @@ module instruction_decode (
                 endcase
             end
 
-            // -----------------------------------------------------------------
             //  I-TYPE Load
             //  LB LH LW LD LBU LHU LWU
-            // -----------------------------------------------------------------
             OpcILoad: begin
                 dec.instr_type = I_TYPE;
                 dec.rs1        = f_rs1(in_instruction);
@@ -303,9 +273,7 @@ module instruction_decode (
                 endcase
             end
 
-            // -----------------------------------------------------------------
             //  JALR
-            // -----------------------------------------------------------------
             OpcIJalr: begin
                 dec.instr_type = I_TYPE;
                 dec.rs1        = f_rs1(in_instruction);
@@ -319,10 +287,8 @@ module instruction_decode (
                 if (f_funct3(in_instruction) != 3'h0) unknown = 1'b1;
             end
 
-            // -----------------------------------------------------------------
             //  S-TYPE
             //  SB SH SW SD
-            // -----------------------------------------------------------------
             OpcS: begin
                 dec.instr_type = S_TYPE;
                 dec.rs1        = f_rs1(in_instruction);
@@ -343,10 +309,8 @@ module instruction_decode (
                 endcase
             end
 
-            // -----------------------------------------------------------------
             //  B-TYPE
             //  BEQ BNE BLT BGE BLTU BGEU
-            // -----------------------------------------------------------------
             OpcB: begin
                 dec.instr_type = B_TYPE;
                 dec.rs1        = f_rs1(in_instruction);
@@ -369,9 +333,7 @@ module instruction_decode (
                 endcase
             end
 
-            // -----------------------------------------------------------------
             //  LUI
-            // -----------------------------------------------------------------
             OpcULui: begin
                 dec.instr_type = U_TYPE;
                 dec.rd         = f_rd(in_instruction);
@@ -381,9 +343,7 @@ module instruction_decode (
                 aop            = ALU_LUI_PASS;
             end
 
-            // -----------------------------------------------------------------
             //  AUIPC
-            // -----------------------------------------------------------------
             OpcUAui: begin
                 dec.instr_type = U_TYPE;
                 dec.rd         = f_rd(in_instruction);
@@ -393,9 +353,7 @@ module instruction_decode (
                 aop            = ALU_AUIPC;
             end
 
-            // -----------------------------------------------------------------
             //  JAL
-            // -----------------------------------------------------------------
             OpcJJal: begin
                 dec.instr_type = J_TYPE;
                 dec.rd         = f_rd(in_instruction);
@@ -406,9 +364,7 @@ module instruction_decode (
                 aop            = ALU_PASS_A;   // rd ← PC+4
             end
 
-            // -----------------------------------------------------------------
             //  SYSTEM — CSR, ECALL, EBREAK, MRET, SRET, WFI
-            // -----------------------------------------------------------------
             OpcSystem: begin
                 if (f_funct3(in_instruction) != 3'h0) begin
                     // ── CSR variants ─────────────────────────────────────────
@@ -456,7 +412,7 @@ module instruction_decode (
                     endcase
 
                 end else begin
-                    // ── Privileged (funct3 = 000) ─────────────────────────────
+                    //Privileged (funct3 = 000)
                     dec.instr_type = SYS_TYPE;
                     dec.sys_call   = 1'b1;
 
@@ -471,9 +427,7 @@ module instruction_decode (
                 end
             end
 
-            // -----------------------------------------------------------------
             //  FENCE / FENCE.I
-            // -----------------------------------------------------------------
             OpcFence: begin
                 dec.instr_type = SYS_TYPE;
                 dec.sys_call   = 1'b1;
@@ -481,9 +435,7 @@ module instruction_decode (
                                  ? SYS_FENCE_I : SYS_FENCE;
             end
 
-            // -----------------------------------------------------------------
             //  Illegal / unknown opcode
-            // -----------------------------------------------------------------
             default: unknown = 1'b1;
 
         endcase

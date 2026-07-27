@@ -18,9 +18,8 @@ module register_file #(
     // 32 general-purpose registers
     logic [XLEN-1:0] reg_array [32];
 
-    //--------------------------------------------------------------------------
+
     // Write Port
-    //--------------------------------------------------------------------------
     always_ff @(posedge clk or negedge rst_n) begin
         integer i;
 
@@ -41,7 +40,6 @@ module register_file #(
         end
     end
 
-    //--------------------------------------------------------------------------
     // Read Port 1 - with same-cycle write-forwarding ("write-first" bypass).
     //
     // FORWARDING LOGIC:
@@ -55,7 +53,6 @@ module register_file #(
     // hazard. This mux resolves it by forwarding rd_data directly to the
     // read output whenever the read and write addresses match in the same
     // cycle, instead of waiting a cycle for the array to update.
-    //--------------------------------------------------------------------------
     always_comb begin
         if (!reg_read_en)
             rs1_data = '0;
@@ -67,9 +64,7 @@ module register_file #(
             rs1_data = reg_array[rs1_addr];
     end
 
-    //--------------------------------------------------------------------------
     // Read Port 2 - identical forwarding logic.
-    //--------------------------------------------------------------------------
     always_comb begin
         if (!reg_read_en)
             rs2_data = '0;

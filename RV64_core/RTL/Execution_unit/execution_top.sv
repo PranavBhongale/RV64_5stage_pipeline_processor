@@ -12,31 +12,31 @@ import alu_pkg::*;
 module execution_top #(
     parameter int XLEN = 64
 )(
-    // ---- Global ----
+    //  Global
     input  logic clk,
     input  logic rst_n,
 
-    // ---- Handshake from Decode stage ----
+    // Handshake from Decode stage
     input  logic                          valid_decode,
     output logic                          ready_execution_unit,
 
-    // ---- Operands forwarded from Decode / Register-File stage ----
+    //  Operands forwarded from Decode / Register-File stage
     input  logic [XLEN-1:0]              rs1_data,
     input  logic [XLEN-1:0]              rs2_data,
 
-    // ---- Current PC (AUIPC, branch target, return address) ----
+    //  Current PC (AUIPC, branch target, return address)
     input  logic [XLEN-1:0]              pc_in,
 
-    // ---- Decoded instruction bundle + ALU opcode ----
+    //  Decoded instruction bundle + ALU opcode
     input  decode_pkg::decoded_instr_t   decode_instruction,
     input  alu_pkg::alu_op_t             alu_operation,
 
-    // ---- Branch resolution → Fetch / Branch Control Unit ----
+    //  Branch resolution → Fetch / Branch Control Unit
     output logic                          branch_taken,
     output logic [XLEN-1:0]              branch_target,
     output logic [XLEN -1 :0 ]           pc_out ,
 
-    // ---- Handshake to Memory stage (loads & stores) ----
+    //  Handshake to Memory stage (loads & stores)
     output logic                          valid_to_memory,
     input  logic                          ready_memory,
     output logic [XLEN-1:0]              req_addr_i,     // effective address (rs1 + imm)

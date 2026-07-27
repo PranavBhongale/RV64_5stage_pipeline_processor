@@ -71,22 +71,11 @@ instruction_decode_top#(
 
 );
 
-//--------------------------------------------------------------------
-// Load-use hazard detection.
-//
-// FORWARDING can only supply a value that already exists. A load's
-// result doesn't exist until the memory response lands (which can take
-// several cycles), so a dependent instruction sitting in Decode right
-// behind it has to be stalled - not forwarded to - until that happens.
-//--------------------------------------------------------------------
 logic load_use_hazard;
 assign load_use_hazard = load_hazard_valid_i && (load_hazard_rd_i != 5'd0) &&
-                          ( (decoded_instr_reg.rs1_used && decoded_instr_reg.rs1 == load_hazard_rd_i) ||
-                            (decoded_instr_reg.rs2_used && decoded_instr_reg.rs2 == load_hazard_rd_i) );
+                      ( (decoded_instr_reg.rs1_used && decoded_instr_reg.rs1 == load_hazard_rd_i) ||
+                      (decoded_instr_reg.rs2_used && decoded_instr_reg.rs2 == load_hazard_rd_i) );
 
-// Tell Fetch to hold too: the instruction causing the hazard must stay
-// put in Decode's combinational input until the load resolves, so it
-// can't be allowed to advance out of the IF/ID register in the meantime.
 assign ready_o = ready_i && !load_use_hazard;
 
 //  this is the ID/EX pipeline register
@@ -100,10 +89,6 @@ always_ff @(posedge clk or negedge rst_n) begin
       rs2_data <= '0;
       pc_out <= '0;
     end else if (load_use_hazard) begin
-      // Insert a bubble into Execute and hold the hazardous instruction
-      // (and its operands) exactly where it is; do not let it advance
-      // until the load result is available (and forwarded, same as any
-      // other producer, by the register-file's write-first bypass).
       valid_o <= 1'b0;
     end else begin
       decoded_instr <= decoded_instr_reg;
