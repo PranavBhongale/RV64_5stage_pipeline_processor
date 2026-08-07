@@ -20,8 +20,6 @@ run_golden_model: all
 
 clean:
 	del /Q $(TARGET)
-
-
 # Files
 ASM     = scripts\test_env\program.asm
 IMEM    = memory\golden_instruction_memory.hex
@@ -51,10 +49,6 @@ OUTPUT_ASM = scripts\test_env\program.asm
 
 compile_all:
 	$(CCOMPILER) $(INPUT_C) -o $(OUTPUT_ASM)
-
-
-
-
 
 # Makefile for Verilator simulation
 

@@ -1,6 +1,5 @@
 `timescale 1ns/1ps
 
-// =============================================================================
 //  tb_branch_logic_top — Full-coverage self-checking testbench
 //
 //  DUT : branch_logic_top (which internally instantiates branch_target_buffer)
@@ -22,20 +21,15 @@
 //  T13  Target not overwritten on not-taken — stored target survives a not-taken update
 //  T14  All-entries fill          — write all 16 entries and read back
 //  T15  Re-reset after population — all entries invalidated again
-// =============================================================================
 
 module branch_logic_tb;
 
-    // -------------------------------------------------------------------------
     //  Parameters (must match DUT)
-    // -------------------------------------------------------------------------
     localparam int XLEN        = 64;
     localparam int BTB_ENTRIES = 16;
     localparam int INDEX_W     = $clog2(BTB_ENTRIES);   // 4
 
-    // -------------------------------------------------------------------------
     //  DUT signals
-    // -------------------------------------------------------------------------
     logic             clk;
     logic             rst_n;
     logic [XLEN-1:0] pc;
@@ -47,9 +41,7 @@ module branch_logic_tb;
     logic             btb_hit;
     logic             predict_taken;
 
-    // -------------------------------------------------------------------------
     //  DUT instantiation
-    // -------------------------------------------------------------------------
     branch_logic_top #(
         .XLEN       (XLEN),
         .BTB_ENTRIES(BTB_ENTRIES)
@@ -66,32 +58,24 @@ module branch_logic_tb;
         .predict_taken(predict_taken)
     );
 
-    // -------------------------------------------------------------------------
     //  Clock — 10 ns period
-    // -------------------------------------------------------------------------
     initial clk = 0;
     always #5 clk = ~clk;
 
-    // -------------------------------------------------------------------------
     //  Scoreboard counters
-    // -------------------------------------------------------------------------
     int pass_cnt = 0;
     int fail_cnt = 0;
 
-    // -------------------------------------------------------------------------
     //  Helper — PC → index (mirrors BTB internals: bits [INDEX_W:1])
-    // -------------------------------------------------------------------------
     function automatic logic [INDEX_W-1:0] pc_to_index (input logic [XLEN-1:0] p);
         return p[INDEX_W:1];
     endfunction
 
-    // -------------------------------------------------------------------------
     //  Helper — build a PC that hashes to a given index with a specific tag
     //  PC layout:  bits[XLEN-1:INDEX_W+1]=tag | bits[INDEX_W:1]=index | bit[0]=0
     //
     //  tag_val is XLEN bits wide — no truncation at the parameter boundary.
     //  Callers should ensure non-zero bits sit within bits [XLEN-1:INDEX_W+1].
-    // -------------------------------------------------------------------------
     function automatic logic [XLEN-1:0] make_pc (
         input logic [INDEX_W-1:0]  idx,
         input logic [XLEN-1:0]     tag_val     // full width, never truncated
@@ -103,9 +87,7 @@ module branch_logic_tb;
         return p;
     endfunction
 
-    // -------------------------------------------------------------------------
     //  Assertion task — checks and prints PASS / FAIL
-    // -------------------------------------------------------------------------
     task automatic chk (
         input string    test_name,
         input logic     got,
@@ -134,9 +116,7 @@ module branch_logic_tb;
         end
     endtask
 
-    // -------------------------------------------------------------------------
     //  Drive helpers
-    // -------------------------------------------------------------------------
 
     // Apply one update.  Ends on a negedge with update_en=0 AND one
     // full idle cycle consumed, so back-to-back calls inside repeat()
@@ -199,9 +179,7 @@ module branch_logic_tb;
         rst_n = 1'b1;
     endtask
 
-    // -------------------------------------------------------------------------
     //  Main stimulus
-    // -------------------------------------------------------------------------
     initial begin : STIMULUS
         $display("=================================================================");
         $display("  tb_branch_logic_top — Full Coverage Testbench");
@@ -216,9 +194,7 @@ module branch_logic_tb;
         target_pc    = '0;
         branch_taken = 1'b0;
 
-        // -----------------------------------------------------------------
         // T01 — Reset behaviour
-        // -----------------------------------------------------------------
         $display("\n--- T01: Reset behaviour ---");
         do_reset();
         // After reset, query every possible index: should be miss
@@ -228,9 +204,7 @@ module branch_logic_tb;
             chk($sformatf("T01 reset: idx=%0d predict_taken=0", idx), predict_taken, 1'b0);
         end
 
-        // -----------------------------------------------------------------
         // T02 — Cold miss: predicted_pc must be PC+4
-        // -----------------------------------------------------------------
         $display("\n--- T02: Cold miss → predicted_pc = PC+4 ---");
         begin
             logic [XLEN-1:0] test_pc;
@@ -240,9 +214,7 @@ module branch_logic_tb;
             chk64("T02 cold miss: predicted=pc+4",  predicted_pc, test_pc + 64'd4);
         end
 
-        // -----------------------------------------------------------------
         // T03 — Basic taken update → hit + predict taken + correct target
-        // -----------------------------------------------------------------
         $display("\n--- T03: Basic taken update ---");
         begin
             logic [XLEN-1:0] branch_pc, tgt;
@@ -257,9 +229,7 @@ module branch_logic_tb;
             chk64("T03 taken: predicted_pc=target",  predicted_pc,  tgt);
         end
 
-        // -----------------------------------------------------------------
         // T04 — Basic not-taken update → hit, predict_taken=0, PC+4
-        // -----------------------------------------------------------------
         $display("\n--- T04: Basic not-taken update ---");
         begin
             logic [XLEN-1:0] branch_pc, tgt;
@@ -276,9 +246,7 @@ module branch_logic_tb;
             chk64("T04 not-taken: predicted=pc+4",   predicted_pc,  branch_pc + 64'd4);
         end
 
-        // -----------------------------------------------------------------
         // T05 — Saturation upper bound (strongly taken, counter stays 2'b11)
-        // -----------------------------------------------------------------
         $display("\n--- T05: Saturation upper bound ---");
         begin
             logic [XLEN-1:0] branch_pc, tgt;
@@ -297,9 +265,7 @@ module branch_logic_tb;
             chk  ("T05 sat-upper-1: predict_taken=1", predict_taken, 1'b1);
         end
 
-        // -----------------------------------------------------------------
         // T06 — Saturation lower bound (strongly not-taken, stays 2'b00)
-        // -----------------------------------------------------------------
         $display("\n--- T06: Saturation lower bound ---");
         begin
             logic [XLEN-1:0] branch_pc, tgt;
@@ -318,9 +284,7 @@ module branch_logic_tb;
             chk  ("T06 sat-lower+1: predict_taken=0", predict_taken, 1'b0);
         end
 
-        // -----------------------------------------------------------------
         // T07 — Weakly-taken → not-taken (2'b10 → 2'b01 → 2'b00)
-        // -----------------------------------------------------------------
         $display("\n--- T07: Weakly-taken flips to not-taken after 2 not-taken updates ---");
         begin
             logic [XLEN-1:0] branch_pc, tgt;
@@ -343,9 +307,7 @@ module branch_logic_tb;
             chk("T07 after 2 NT: predict_taken=0", predict_taken, 1'b0);
         end
 
-        // -----------------------------------------------------------------
         // T08 — Weakly-not-taken → taken (2'b01 → 2'b10)
-        // -----------------------------------------------------------------
         $display("\n--- T08: Weakly-not-taken flips to taken after 2 taken updates ---");
         begin
             logic [XLEN-1:0] branch_pc, tgt;
@@ -370,10 +332,8 @@ module branch_logic_tb;
             chk64("T08 after 2 T: predicted_pc=tgt", predicted_pc, tgt);
         end
 
-        // -----------------------------------------------------------------
         // T09 — Tag aliasing / eviction
         //        Two PCs with the same index but different tags
-        // -----------------------------------------------------------------
         $display("\n--- T09: Tag aliasing (same index, different tag) ---");
         begin
             logic [XLEN-1:0] pc_A, pc_B, tgt_A, tgt_B;
@@ -400,9 +360,7 @@ module branch_logic_tb;
             chk64("T09 A falls through to pc_A+4",   predicted_pc,  pc_A + 64'd4);
         end
 
-        // -----------------------------------------------------------------
         // T10 — Mid-run reset clears all entries
-        // -----------------------------------------------------------------
         $display("\n--- T10: Mid-run reset ---");
         begin
             logic [XLEN-1:0] branch_pc, tgt;
@@ -422,10 +380,8 @@ module branch_logic_tb;
             end
         end
 
-        // -----------------------------------------------------------------
         // T11 — Simultaneous update + query on the same index
         //        Query must see the OLD value (read-before-write SRAM model)
-        // -----------------------------------------------------------------
         $display("\n--- T11: Simultaneous update + query (same index, read-before-write) ---");
         begin
             logic [XLEN-1:0] branch_pc, tgt;
@@ -453,9 +409,7 @@ module branch_logic_tb;
             chk64("T11 after update cycle: predicted=tgt",   predicted_pc,  tgt);
         end
 
-        // -----------------------------------------------------------------
         // T12 — PC+4 fallthrough for miss and predict_not_taken
-        // -----------------------------------------------------------------
         $display("\n--- T12: predicted_pc = PC+4 on miss and on not-taken prediction ---");
         begin
             logic [XLEN-1:0] branch_pc, tgt;
@@ -475,9 +429,7 @@ module branch_logic_tb;
             chk64("T12 not-taken hit: predicted=pc+4",  predicted_pc,  branch_pc + 64'd4);
         end
 
-        // -----------------------------------------------------------------
         // T13 — Target NOT overwritten by a not-taken update
-        // -----------------------------------------------------------------
         $display("\n--- T13: Target preserved across not-taken update ---");
         begin
             logic [XLEN-1:0] branch_pc, tgt_orig, tgt_fake;
@@ -497,9 +449,7 @@ module branch_logic_tb;
             chk64("T13 target preserved (not tgt_fake)", predicted_pc, tgt_orig);
         end
 
-        // -----------------------------------------------------------------
         // T14 — Fill all BTB_ENTRIES and read back
-        // -----------------------------------------------------------------
         $display("\n--- T14: Fill all %0d BTB entries and read back ---", BTB_ENTRIES);
         begin
             logic [XLEN-1:0] pcs   [BTB_ENTRIES];
@@ -530,9 +480,7 @@ module branch_logic_tb;
             end
         end
 
-        // -----------------------------------------------------------------
         // T15 — Re-reset after full population
-        // -----------------------------------------------------------------
         $display("\n--- T15: Re-reset after full population ---");
         do_reset();
         for (int idx = 0; idx < BTB_ENTRIES; idx++) begin
@@ -540,9 +488,7 @@ module branch_logic_tb;
             chk($sformatf("T15 post-reset: idx=%0d hit=0", idx), btb_hit, 1'b0);
         end
 
-        // -----------------------------------------------------------------
         //  Summary
-        // -----------------------------------------------------------------
         @(negedge clk);
         $display("\n=================================================================");
         $display("  RESULTS:  PASS=%0d   FAIL=%0d   TOTAL=%0d",
@@ -555,18 +501,14 @@ module branch_logic_tb;
         $finish;
     end : STIMULUS
 
-    // -------------------------------------------------------------------------
     //  Timeout watchdog — 100 µs
-    // -------------------------------------------------------------------------
     initial begin
         #100_000;
         $display("[WATCHDOG] Simulation exceeded 100 us — force-stopping.");
         $finish;
     end
 
-    // -------------------------------------------------------------------------
     //  Waveform dump (comment out if not needed)
-    // -------------------------------------------------------------------------
     initial begin
         $dumpfile("tb_branch_logic_top.vcd");
         $dumpvars(0, tb_branch_logic_top);
