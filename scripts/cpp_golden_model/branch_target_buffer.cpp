@@ -53,7 +53,7 @@ class BTB {
 
 public:
 
-    // ── 2-bit saturating counter ──────────────────────────────
+    // ── 2-bit saturating counter
     enum State : uint8_t {
         STRONGLY_NOT_TAKEN = 0b00,
         WEAKLY_NOT_TAKEN   = 0b01,
@@ -61,7 +61,7 @@ public:
         STRONGLY_TAKEN     = 0b11,
     };
 
-    // ── Lookup Port (IF stage) ────────────────────────────────
+    // ── Lookup Port (IF stage)
     uint64_t pc_i           = 0;
     bool     lookup_valid_i = false;
 
@@ -70,7 +70,7 @@ public:
     uint64_t target_o       = 0;       // full 64-bit target
     State    state_o        = STRONGLY_NOT_TAKEN;
 
-    // ── Update Port (EX stage) ────────────────────────────────
+    // ── Update Port (EX stage)
     uint64_t update_pc_i     = 0;
     uint64_t update_target_i = 0;      // full 64-bit target
     bool     update_taken_i  = false;
@@ -78,7 +78,7 @@ public:
 
     bool     update_ready_o  = false;
 
-    // ── Constructor ───────────────────────────────────────────
+    // ── Constructor
     BTB() { reset(); }
 
     void reset() {
@@ -96,15 +96,13 @@ public:
         update_ready_o  = false;
     }
 
-    // ─────────────────────────────────────────────────────────
     //  tick()
     //  Lookup  → combinational (result same cycle).
     //  Update  → registered   (visible next cycle).
     //  Both ports work independently every cycle.
-    // ─────────────────────────────────────────────────────────
     void tick() {
 
-        // ── Lookup (combinational) ────────────────────────────
+        // ── Lookup (combinational)
         lookup_ready_o = true;
         hit_o          = false;
         target_o       = 0;
@@ -122,7 +120,7 @@ public:
             }
         }
 
-        // ── Update (registered) ───────────────────────────────
+        // ── Update (registered)
         update_ready_o = true;
 
         if (update_valid_i) {
@@ -138,7 +136,7 @@ public:
         }
     }
 
-    // ── dump ─────────────────────────────────────────────────
+    // ── dump 
     void dump() const {
         static const char* sn[] = {"SN","WN","WT","ST"};
         printf("\n||======= BTB Dump (%d entries) =====================================\n",

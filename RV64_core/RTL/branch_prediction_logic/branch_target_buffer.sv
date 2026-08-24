@@ -20,7 +20,7 @@ module branch_target_buffer #(
     output logic            taken
 );
 
-    localparam int INDEX_W = $clog2(BTB_ENTRIES);
+localparam int INDEX_W = $clog2(BTB_ENTRIES);
 
     typedef struct packed {
         logic valid;
@@ -31,9 +31,7 @@ module branch_target_buffer #(
 
     btb_entry_t btb_array[BTB_ENTRIES];
 
-    //-------------------------------------------------------------
     // Update logic
-    //-------------------------------------------------------------
     always_ff @(posedge clk or negedge rst_n) begin
         integer i;
         logic [INDEX_W-1:0] index;
@@ -85,9 +83,7 @@ module branch_target_buffer #(
         end
     end
 
-    //-------------------------------------------------------------
     // Query logic
-    //-------------------------------------------------------------
     always_comb begin
         logic [INDEX_W-1:0] index;
 

@@ -1,10 +1,4 @@
-//  decode_pkg.sv
-//  Package: all enum typedefs shared by the instruction decode unit and
-//           downstream pipeline stages.
-//
-//  NOTE: ALU_OP is intentionally NOT defined here.
-//        It lives in your existing alu_op_pkg (or equivalent).
-//        Import that package wherever ALU_OP is needed.
+
 `timescale 1ns/1ps
 package decode_pkg;
 

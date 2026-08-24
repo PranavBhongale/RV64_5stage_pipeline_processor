@@ -1,24 +1,3 @@
-//  instruction_decode.sv
-//
-//  RV64I + M-extension — PURELY COMBINATIONAL decode unit.
-//
-//  No registers, no clock, no reset.
-//  Valid/ready are pass-through: in_ready = out_ready (no internal stall).
-//  The caller (top-level pipeline) owns all registers and handshake buffering.
-//
-//  Ports
-//
-//    in_valid        — upstream valid
-//    in_ready        — driven by this module = out_ready (pass-through)
-//    in_instruction  — 32-bit raw instruction
-//    in_pc           — 64-bit PC of this instruction
-//
-//    out_valid       — = in_valid (pass-through)
-//    out_ready       — driven by downstream; fed back to in_ready
-//    out_decoded     — decoded_instr_t bundle
-//    out_alu_op      — alu_op_e (separate, from alu_op_pkg)
-//    out_pc          — = in_pc  (pass-through)
-
 
 `timescale 1ns/1ps
 import decode_pkg::*;
@@ -448,5 +427,3 @@ module instruction_decode (
     end  // always_comb
 
 endmodule
-
-

@@ -53,7 +53,7 @@ module data_memory #(
 
     // Alignment Check
 initial begin
-    $readmemh("memory/rtl_data_memory.hex", memory);
+    $readmemh("memory/rtl_data_memory_result.hex", memory);
     $display("Loading data memory from memory/rtl_data_memory.hex");
 end
 

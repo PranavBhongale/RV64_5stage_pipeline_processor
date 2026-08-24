@@ -238,10 +238,10 @@ public:
     {
         instruction_ready = true;
 
-        printf("IMEM READ: addr=%llX index=%llu data=%08X\n",
-       instruction_address,
-       instruction_address/4,
-       instruction_data);
+    //     printf("IMEM READ: addr=%llX index=%llu data=%08X\n",
+    //    instruction_address,
+    //    instruction_address/4,
+    //    instruction_data);
         if(!instruction_valid)
             return;
 
@@ -324,12 +324,10 @@ public:
             }
             saveDataMemory();
         }
-         for (int i = 0; i < 10; i++)
-        {
-            printf("IMEM[%d] = %08X\n", i, instruction_memory[i]);
-        }
+        //  for (int i = 0; i < 10; i++)
+        // {
+        //     printf("IMEM[%d] = %08X\n", i, instruction_memory[i]);
+        // }
     }
    
 };
-
-

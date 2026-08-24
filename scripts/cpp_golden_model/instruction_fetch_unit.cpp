@@ -42,7 +42,7 @@ public:
             case State::IDLE:
                 if (pc_valid) {
                     // Latch PC and issue request to instruction memory
-                    cout << "  [IF] PC=0x" << hex << pc << dec << " valid = requesting instruction\n";
+                  //  cout << "  [IF] PC=0x" << hex << pc << dec << " valid = requesting instruction\n";
                     latched_pc = pc;
                     imem_addr  = pc;
                     imem_req   = true;
@@ -55,7 +55,7 @@ public:
                 // Hold the request address steady while waiting
                 imem_addr = latched_pc;
                 imem_req  = true;
-               cout << "  [IF] Waiting for memory response...\n";
+              // cout << "  [IF] Waiting for memory response...\n";
                 if (imem_ready) {               // Memory responded with data
                     imem_req      = false;       // De-assert request
                     latched_instr = imem_data;   // Latch instruction before req drops
@@ -68,7 +68,7 @@ public:
                 out_pc          = latched_pc;
                 out_instruction = latched_instr; // Use internally latched data
                 out_valid       = true;          // Signal decode: data is valid
-              cout  << "  [IF] Instruction 0x" << hex << latched_instr << dec << " ready for decode\n";
+            //  cout  << "  [IF] Instruction 0x" << hex << latched_instr << dec << " ready for decode\n";
                 if (out_ready) {                 // Decode accepted the instruction
                     state = State::IDLE;         // Ready to fetch next instruction
                 }

@@ -62,4 +62,3 @@ module branch_logic_top #(
     end
 
 endmodule
-

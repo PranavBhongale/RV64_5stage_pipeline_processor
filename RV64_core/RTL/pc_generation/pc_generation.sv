@@ -12,7 +12,7 @@ module pc_generation #(
     input  logic [XLEN-1:0] pc_from_execution,
     // Branch resolution from execute stage
     input  logic [XLEN-1:0] pc_target_exe,   // Resolved/correct branch target
-    input  logic            branch_taken,     // EX: branch/jump was actually taken
+    input  logic            branch_taken,     // EX branch/jump was actually taken
     // PC output to fetch unit
     output logic [XLEN-1:0] pc,
     // Pipeline flush output (one-cycle pulse)

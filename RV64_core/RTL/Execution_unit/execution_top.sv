@@ -45,7 +45,7 @@ module execution_top #(
     output logic [4:0]                   req_rd_i,       // rd addr for load→WB path
     output logic                          req_is_load_i,  // 1 = this request is a load (for load-use hazard detection)
 
-    // ---- Handshake to Write-Back stage ----
+    //Handshake to Write-Back stage
     output logic                          valid_to_writeback,
     input  logic                          ready_writeback,
     output logic [4:0]                    rd,
@@ -83,7 +83,6 @@ module execution_top #(
             alu_operand_b = rs2_data;
     end
 
-    //  ALU instantiation  (your existing module)
     alu_module #(
         .XLEN (XLEN)
     ) u_alu (

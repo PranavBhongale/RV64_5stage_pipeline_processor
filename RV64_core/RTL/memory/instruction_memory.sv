@@ -33,7 +33,7 @@ int unsigned current_delay;
 
 initial begin
     $readmemh(
-        "memory/rtl_instruction_memory.hex",
+        "memory/golden_instruction_memory.hex",
         instruction_memory
     );
     $display("Loading instruction memory from memory/rtl_instruction_memory.hex");

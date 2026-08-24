@@ -1,0 +1,23 @@
+[*]
+[*] GTKWave Analyzer v3.3.118 (w)1999-2023 BSI
+[*] Thu Aug 20 17:00:44 2026
+[*]
+[dumpfile] "C:\Users\Netizens\Documents\SV_Project\5StageRV64_processor\top_tb.vcd"
+[dumpfile_mtime] "Thu Aug 20 16:52:45 2026"
+[dumpfile_size] 203718
+[savefile] "C:\Users\Netizens\Documents\SV_Project\5StageRV64_processor\wave.gtkw"
+[timestart] 0
+[size] 1000 600
+[pos] -1 -1
+*-13.000000 9090 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] top_tb.
+[sst_width] 174
+[signals_width] 182
+[sst_expanded] 1
+[sst_vpaned_height] 157
+@28
+top_tb.clk
+@23
+top_tb.dut.load_hazard_rd[4:0]
+[pattern_trace] 1
+[pattern_trace] 0

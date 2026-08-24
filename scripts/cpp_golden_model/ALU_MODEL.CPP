@@ -6,7 +6,6 @@
 #include <cstdio>
 #include <cassert>
 using namespace std;
-// ============================================================
 //  RV64 ALU — Black Box Model
 //  ─────────────────────────────────────────────────────────
 //  Covers every arithmetic/logic operation needed by the
@@ -28,7 +27,7 @@ using namespace std;
 //  │  ◄── ready_o          │          │──► overflow_o     │
 //  │  ◄── valid_o          └──────────┘──► carry_o        │
 //  │  ready_i         ──►                                 │
-//  └──────────────────────────────────────────────────────┘
+//  ========================================================
 //
 //  ALU opcodes (alu_op_i) — driven by ALU Control Unit
 //  ─────────────────────────────────────────────────────────
@@ -72,15 +71,15 @@ using namespace std;
 //  └────┴──────────────┴─────────────────────────────────┘
 // ============================================================
 
-// ── ALU opcode enum ──────────────────────────────────────────
+// ── ALU opcode enum
 #include "alu_op.h"
 
-// ── helper: sign-extend 32-bit result to 64 bits ────────────
+// ── helper: sign-extend 32-bit result to 64 bits
 static inline uint64_t sext32(uint32_t v) {
     return static_cast<uint64_t>(static_cast<int64_t>(static_cast<int32_t>(v)));
 }
 
-// ── helper: 128-bit signed multiply ─────────────────────────
+// ── helper: 128-bit signed multiply
 // GCC/Clang support __int128 natively
 static inline uint64_t mulh_signed(int64_t a, int64_t b) {
     __int128 res = static_cast<__int128>(a) * static_cast<__int128>(b);
@@ -113,7 +112,7 @@ public:
     uint64_t b_i      = 0;       // operand B  (rs2 or immediate)
     ALU_OP   alu_op_i = ALU_OP::ALU_ADD; // operation select from ALU ctrl
 
-    // ── Output channel ────────────────────────────────────────
+    // ── Output channel
     bool     valid_o    = false; // result is valid this cycle
     bool     ready_o    = false; // ALU can accept new inputs
 
@@ -123,11 +122,11 @@ public:
     bool     carry_o    = false; // unsigned carry out (ADD/SUB)
     bool     overflow_o = false; // signed overflow    (ADD/SUB)
 
-    // ── Exception flags ───────────────────────────────────────
+    // ── Exception flags
     bool     div_by_zero_o = false;  // DIV/REM by zero
     bool     div_overflow_o= false;  // MIN_INT / -1
 
-    // ── Constructor ───────────────────────────────────────────
+    // ── Constructor
     ALU() { reset(); }
 
     void reset() {
@@ -140,7 +139,6 @@ public:
         div_by_zero_o = false; div_overflow_o = false;
     }
 
-    // ─────────────────────────────────────────────────────────
     //  tick()
     //  ──────
     //  Called once per clock cycle by the pipeline.
@@ -155,7 +153,6 @@ public:
     //
     //  Transaction fires when valid_i & ready_o both high.
     //  Result consumed  when valid_o & ready_i both high.
-    // ─────────────────────────────────────────────────────────
     void tick() {
 
         // ALU is always ready to accept (single cycle, no buffer)
@@ -171,13 +168,13 @@ public:
         div_by_zero_o  = false;
         div_overflow_o = false;
 
-        // ── Input handshake ──────────────────────────────────
+        //Input handshake
         if (!valid_i || !ready_o) return;
 
-        // ── Execute ──────────────────────────────────────────
+        // Execute
         result_o = compute(a_i, b_i, alu_op_i);
 
-        // ── Flag generation ───────────────────────────────────
+        // Flag generation
         zero_o     = (result_o == 0);
         neg_o      = (result_o >> 63) & 1;
 
@@ -211,9 +208,7 @@ public:
         // In a simple in-order pipeline this is always 1 cycle.
     }
 
-    // ─────────────────────────────────────────────────────────
     //  Debug dump
-    // ─────────────────────────────────────────────────────────
     void dump() const {
         static const char* op_names[] = {
             "ADD","SUB","AND","OR","XOR","SLL","SRL","SRA",
@@ -237,9 +232,7 @@ public:
         printf("==================================================================\n");
     }
 
-// ──────────────────────────────────────────────────────────────
 //  PRIVATE — execution core (invisible to pipeline)
-// ──────────────────────────────────────────────────────────────
 private:
 
     uint64_t compute(uint64_t a, uint64_t b, ALU_OP op) {

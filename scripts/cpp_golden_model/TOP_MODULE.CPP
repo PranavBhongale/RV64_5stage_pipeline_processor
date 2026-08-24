@@ -33,9 +33,7 @@ using namespace std;
 #include "instruction_fetch_unit.cpp"
 #include "register_file.cpp"
 
-// ============================================================
 //  Pipeline register structs
-// ============================================================
 
 struct IF_ID_Reg {
     uint64_t pc          = 0;
@@ -70,9 +68,8 @@ struct MEM_WB_Reg {
     bool             valid      = false;
 };
 
-// ============================================================
+
 //  Helper: resolve branch decision from ALU flags
-// ============================================================
 static bool evaluate_branch(BranchOp op, bool zero, bool neg,
                              bool overflow, uint64_t a, uint64_t b)
 {
@@ -89,9 +86,7 @@ static bool evaluate_branch(BranchOp op, bool zero, bool neg,
     }
 }
 
-// ============================================================
 //  Helper: map MemOp → DataType + read/write enables
-// ============================================================
 static void mem_op_to_signals(MemOp op,
                                bool& rd_en, bool& wr_en,
                                DataType& dtype,
@@ -117,9 +112,8 @@ static void mem_op_to_signals(MemOp op,
     }
 }
 
-// ============================================================
+
 //  Helper: sign-extend a loaded value given access width
-// ============================================================
 static uint64_t sign_extend_load(uint64_t raw, DataType dtype)
 {
     switch (dtype) {
@@ -137,12 +131,10 @@ static uint64_t sign_extend_load(uint64_t raw, DataType dtype)
     }
 }
 
-// ============================================================
 //  Hazard detection unit
 //  Returns true if the ID stage must stall this cycle.
 //  Stall condition: an instruction in EX or MEM is writing
 //  a register that the current ID instruction needs to read.
-// ============================================================
 static bool hazard_detect(const DecodedInstruction& id,
                            const ID_EX_Reg&  id_ex,
                            const EX_MEM_Reg& ex_mem,
@@ -166,12 +158,11 @@ static bool hazard_detect(const DecodedInstruction& id,
     return false;
 }
 
-// ============================================================
+
 //  main — simulation loop
-// ============================================================
 int main()
 {
-    // ── Instantiate modules ───────────────────────────────────
+    // ── Instantiate modules
     ALU                      alu;
     BTB                      btb;
     DataAndInstructionMemory mem;
@@ -179,33 +170,31 @@ int main()
     instruction_fetch        ifu;
     regfile                  rf;
 
-    // ── Pipeline registers ────────────────────────────────────
+    // ── Pipeline registers
     IF_ID_Reg  if_id,  if_id_next;
     ID_EX_Reg  id_ex,  id_ex_next;
     EX_MEM_Reg ex_mem, ex_mem_next;
     MEM_WB_Reg mem_wb, mem_wb_next;
 
-    // ── PC state ──────────────────────────────────────────────
+    //  PC state
     uint64_t PC       = 0;        // current fetch PC
     bool     pc_valid = true;     // start fetching immediately
 
-    // ── Stall state (previous cycle) for IFU backpressure ────
+    //  Stall state (previous cycle) for IFU backpressure
     bool     prev_stall = false;
 
-    // ── Simulation parameters ─────────────────────────────────
-    const int MAX_CYCLES = 10000;
+    //  Simulation parameters
+    const int MAX_CYCLES = 2000;
     bool      halted     = false;
 
     printf("=== RV64 Pipeline Simulation Start ===\n\n");
 
     for (int cycle = 0; cycle < MAX_CYCLES && !halted; ++cycle)
     {
-        printf("===== Cycle %4d   PC=0x%016llX ==========================\n",
-               cycle, PC);
+        // printf("===== Cycle %4d   PC=0x%016llX ==========================\n",
+        //        cycle, PC);
 
-        // ══════════════════════════════════════════════════════
         //  STAGE 1: IF — Instruction Fetch
-        // ══════════════════════════════════════════════════════
 
         // Drive IFU inputs
         ifu.pc       = PC;
@@ -233,9 +222,7 @@ int main()
         btb.lookup_valid_i = pc_valid;
         btb.tick();
 
-        // ══════════════════════════════════════════════════════
         //  STAGE 2: ID — Instruction Decode + Register Read
-        // ══════════════════════════════════════════════════════
 
         dec.in_instruction = if_id.instruction;
         dec.in_pc          = if_id.pc;
@@ -250,18 +237,18 @@ int main()
         rf.port_b.addr  = d.rs2;
         rf.port_b.valid = d.rs2_used && if_id.valid;
 
-        // ── Data hazard detection ─────────────────────────────
+        //Data hazard detection
         bool stall = if_id.valid && hazard_detect(d, id_ex, ex_mem, mem_wb);
-            printf(
-            "ID pc=%llX rs1=%d rs2=%d rd=%d stall=%d\n",
-            if_id.pc,
-            d.rs1,
-            d.rs2,
-            d.rd,
-            stall
-            );
+            // printf(
+            // "ID pc=%llX rs1=%d rs2=%d rd=%d stall=%d\n",
+            // if_id.pc,
+            // d.rs1,
+            // d.rs2,
+            // d.rd,
+            // stall
+            // );
         if (stall) {
-            printf("  [STALL] data hazard — inserting bubble\n");
+         ///   printf("  [STALL] data hazard — inserting bubble\n");
             // Freeze IF/ID; insert NOP bubble into ID/EX
             if_id_next     = if_id;       // keep IF/ID as-is
             id_ex_next     = {};          // bubble (valid=false)
@@ -274,30 +261,28 @@ int main()
             id_ex_next.valid    = if_id.valid && d.valid;
         }
 
-        // ══════════════════════════════════════════════════════
         //  STAGE 3: EX — Execute
-        // ══════════════════════════════════════════════════════
 
         const DecodedInstruction& dx = id_ex.decoded;
-       printf("EX: rd=%d rs1=%d imm=%lld op=%d valid=%d\n",
-       dx.rd,
-       dx.rs1,
-       dx.imm,
-       (int)dx.alu_op,
-       id_ex.valid);
-        // ── Operand A mux (rs1 or PC) ─────────────────────────
+      // printf("EX: rd=%d rs1=%d imm=%lld op=%d valid=%d\n",
+      // dx.rd,
+      // dx.rs1,
+      // dx.imm,
+      //  (int)dx.alu_op,
+      // id_ex.valid);
+        //  Operand A mux (rs1 or PC)
         uint64_t alu_a = id_ex.rs1_data;
         if (dx.instr_type == InstrType::U_TYPE && dx.alu_op == ALU_OP::ALU_AUIPC)
             alu_a = id_ex.pc;   // AUIPC: A = PC
         if (dx.jump && dx.instr_type == InstrType::J_TYPE)
             alu_a = id_ex.pc + 4;  // JAL: pass PC+4 as return address via PASS_A
 
-        // ── Operand B mux (rs2 or immediate) ─────────────────
+        // Operand B mux (rs2 or immediate)
         // Branch instructions compare rs1 vs rs2; imm is only the branch offset
         uint64_t alu_b = (dx.imm_used && !dx.branch) ? static_cast<uint64_t>(dx.imm)
                                        : id_ex.rs2_data;
 
-        // ── Drive ALU ─────────────────────────────────────────
+        // Drive ALU
         alu.valid_i  = id_ex.valid;
         alu.ready_i  = true;
         alu.a_i      = alu_a;
@@ -305,7 +290,7 @@ int main()
         alu.alu_op_i = dx.alu_op;
         alu.tick();
 
-        // ── Branch/Jump resolution ────────────────────────────
+        //Branch/Jump resolution
         bool     branch_taken  = false;
         uint64_t branch_target = 0;
         if (id_ex.valid && dx.branch) {
@@ -325,12 +310,12 @@ int main()
                 branch_target = id_ex.pc + static_cast<uint64_t>(dx.imm);
             }
         }
-            printf("Branch PC = 0x%llX  imm = %lld  target = 0x%llX  taken = %d\n",
-                id_ex.pc,
-                dx.imm,
-                branch_target,
-                branch_taken);
-        // ── BTB update ────────────────────────────────────────
+            // printf("Branch PC = 0x%llX  imm = %lld  target = 0x%llX  taken = %d\n",
+            //     id_ex.pc,
+            //     dx.imm,
+            //     branch_target,
+            //     branch_taken);
+        //BTB update
         btb.update_valid_i  = id_ex.valid && (dx.branch || dx.jump);
         btb.update_pc_i     = id_ex.pc;
         btb.update_target_i = branch_target;
@@ -339,7 +324,7 @@ int main()
         // We re-tick to commit the update (models registered update port)
         ////////////btb.tick();
 
-        // ── PC redirect on branch/jump ────────────────────────
+        //PC redirect on branch/jump
         if (branch_taken) {
             PC       = branch_target;
             pc_valid = true;
@@ -348,15 +333,15 @@ int main()
             if_id_next = {};
             if (!stall)
                id_ex_next = {};
-            printf("  [BRANCH] taken → target 0x%016llX — flushing IF/ID\n",
-                   branch_target);
+            // printf("  [BRANCH] taken → target 0x%016llX — flushing IF/ID\n",
+            //        branch_target);
         }
 
         // Halt on ECALL/EBREAK
         if (id_ex.valid && dx.sys_call &&
             (dx.sys_op == SysOp::ECALL || dx.sys_op == SysOp::EBREAK)) {
-            printf("  [HALT] ECALL/EBREAK encountered at PC=0x%016llX\n",
-                   id_ex.pc);
+            // printf("  [HALT] ECALL/EBREAK encountered at PC=0x%016llX\n",
+            //        id_ex.pc);
             halted = true;
         }
 
@@ -369,13 +354,11 @@ int main()
         ex_mem_next.branch_taken  = branch_taken;
         ex_mem_next.branch_target = branch_target;
         ex_mem_next.valid         = id_ex.valid;
-        printf("[EX->MEM] PC=%llX alu=%llX rs2_data=%llX\n",
-       ex_mem_next.pc,
-       ex_mem_next.alu_result,
-       ex_mem_next.rs2_data);
-        // ══════════════════════════════════════════════════════
+    //  printf("[EX->MEM] PC=%llX alu=%llX rs2_data=%llX\n",
+    //    ex_mem_next.pc,
+    //    ex_mem_next.alu_result,
+    //    ex_mem_next.rs2_data);
         //  STAGE 4: MEM — Data Memory Access
-        // ══════════════════════════════════════════════════════
 
         const DecodedInstruction& dm = ex_mem.decoded;
 
@@ -425,9 +408,7 @@ int main()
         mem_wb_next.mem_data   = mem_rd_data;
         mem_wb_next.valid      = ex_mem.valid;
 
-        // ══════════════════════════════════════════════════════
         //  STAGE 5: WB — Write-Back
-        // ══════════════════════════════════════════════════════
 
         const DecodedInstruction& dw = mem_wb.decoded;
 
@@ -442,7 +423,7 @@ int main()
             rf.port_w.wen   = true;
             rf.port_w.valid = true;
 
-            printf("  [WB] x%d ← 0x%016llX\n", dw.rd, wb_data);
+          //  printf("  [WB] x%d ← 0x%016llX\n", dw.rd, wb_data);
         } else {
             rf.port_w.wen   = false;
             rf.port_w.valid = false;
@@ -453,9 +434,8 @@ int main()
         //  just for WB commit — the stall path skips the ID tick)
         if (stall) rf.tick();
 
-        // ══════════════════════════════════════════════════════
+
         //  Advance PC (only when IFU delivered a valid instruction)
-        // ══════════════════════════════════════════════════════
         if (!branch_taken && !stall && ifu.out_valid) {
             PC += 4;
             pc_valid = true;
@@ -464,9 +444,7 @@ int main()
         // Save stall for next cycle's IFU back-pressure
         prev_stall = stall;
 
-        // ══════════════════════════════════════════════════════
         //  Clock edge: advance all pipeline registers
-        // ══════════════════════════════════════════════════════
         if_id  = if_id_next;
         id_ex  = id_ex_next;
         ex_mem = ex_mem_next;
@@ -483,7 +461,7 @@ int main()
     printf("\n=== Simulation %s after %d cycles ===\n\n",
            halted ? "halted" : "completed (max cycles)", MAX_CYCLES);
 
-    // ── Final state dumps ─────────────────────────────────────
+    //  Final state dumps
     rf.dump();
     btb.dump();
     alu.dump();

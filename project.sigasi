@@ -1,0 +1,10 @@
+{
+    "name": "5StageRV64_processor",
+    "targets": {
+        "rtl": {
+            "libraryMapping": {
+                "": "work"
+            }
+        }
+    }
+}

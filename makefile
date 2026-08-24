@@ -42,7 +42,7 @@ clean_python:
 	rm -f $(IMEM) $(DMEM) $(SYMS)
 
 
-CCOMPILER = python3 c_compiler.py
+CCOMPILER = python3 scripts\python_compilar\c_compiler.py
 
 INPUT_C = scripts\test_env\program.c
 OUTPUT_ASM = scripts\test_env\program.asm
@@ -236,7 +236,7 @@ TB_FILE_TOP = RV64_core/testbench/top_tb.sv
 # Build
 ALL_CONNECTION_TOP:
 	verilator --binary \
-	--trace \
+	--trace-fst \
 	--threads 8 \
 	--top-module $(TOP_MODULE) \
 	$(PKG_FILES_TOP) \
@@ -250,3 +250,6 @@ run_top: ALL_CONNECTION_TOP
 
 clean_top:
 	rm -rf obj_dir *.vcd
+
+wave:
+	gtkwave top_tb.fst  wave.gtkw
