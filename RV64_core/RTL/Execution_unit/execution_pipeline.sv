@@ -75,7 +75,7 @@ module execution_pipeline #(
             alu_op_r <= ALU_ADD;
 
         end
-        else if (ready_execution_unit) begin
+        else if (ready_execution_unit&&valid_decode) begin
 
             valid_r <= valid_decode;
             rs1_r   <= rs1_data;
@@ -95,9 +95,6 @@ module execution_pipeline #(
     execution_top #(
         .XLEN(XLEN)
     ) u_execution (
-
-        .clk(clk),
-        .rst_n(rst_n),
 
         // Pipeline Register Outputs
 

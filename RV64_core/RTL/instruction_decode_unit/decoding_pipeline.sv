@@ -91,12 +91,14 @@ always_ff @(posedge clk or negedge rst_n) begin
     end else if (load_use_hazard) begin
       valid_o <= 1'b0;
     end else begin
-      decoded_instr <= decoded_instr_reg;
-      valid_o <= valid_reg;
-      alu_op_o <= alu_op_reg;
-      rs1_data <= rs1_reg;
-      rs2_data <= rs2_reg;
-      pc_out <= pc_reg ;
+       if(ready_i&&valid_i)begin
+          decoded_instr <= decoded_instr_reg;
+          valid_o <= valid_reg;
+          alu_op_o <= alu_op_reg;
+          rs1_data <= rs1_reg;
+          rs2_data <= rs2_reg;
+          pc_out <= pc_reg ;
+       end
     end
 end
 endmodule

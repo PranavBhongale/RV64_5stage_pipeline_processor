@@ -31,7 +31,6 @@ module instruction_fetch_unit #(
     input  logic [31:0]     imem_instruction_i
 );
 
-
     // IF/ID Pipeline Register
     // (valid_o doubles as this register's own "full" bit)
 
@@ -42,41 +41,31 @@ module instruction_fetch_unit #(
     assign imem_resp_ready_o = !valid_o;
 
 
-    assign pc_ready_o = imem_req_ready_i && !valid_o;
+    assign pc_ready_o = imem_req_ready_i&&!pc_valid_i;
 
     // IF/ID Pipeline Register
     always_ff @(posedge clk or negedge rst_n)
     begin
         if(!rst_n)
         begin
-
             pc_o          <= '0;
             instruction_o <= '0;
             valid_o       <= 1'b0;
-
         end
         else
         begin
            // Decode stage consumed instruction
             if(valid_o && ready_i)
             begin
-
                 valid_o <= 1'b0;
-
             end
             // Memory response arrives
-            if(imem_resp_valid_i && imem_resp_ready_o)
+            if(imem_resp_ready_o && imem_resp_valid_i)
             begin
-
                 pc_o          <= pc_i;
                 instruction_o <= imem_instruction_i;
                 valid_o       <= 1'b1;
-
             end
-
         end
-
     end
-
 endmodule
-

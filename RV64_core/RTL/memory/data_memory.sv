@@ -2,8 +2,8 @@
 module data_memory #(
     parameter int XLEN          = 64,
     parameter int MEMORY_SIZE   = 4096,
-    parameter int MIN_DELAY     = 1,
-    parameter int MAX_DELAY     = 5
+    parameter int MIN_DELAY     = 0,
+    parameter int MAX_DELAY     = 0
 )(
     input  logic             clk,
     input  logic             rst_n,

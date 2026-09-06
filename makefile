@@ -215,8 +215,8 @@ TOP_MODULE = top_tb
 
 # Package files
 PKG_FILES_TOP = \
-RV64_core/RTL/instruction_decode_unit/decode_pkg.svh \
-RV64_core/RTL/pkg/alu_pkg.svh
+RV64_core/RTL/pkg/decode_pkg.sv \
+RV64_core/RTL/pkg/alu_pkg.sv
 
 # RTL files
 RTL_FILES_TOP = \
@@ -247,9 +247,11 @@ ALL_CONNECTION_TOP:
 run_top: ALL_CONNECTION_TOP
 	./obj_dir/V$(TOP_MODULE)
 
-
 clean_top:
 	rm -rf obj_dir *.vcd
 
 wave:
 	gtkwave top_tb.fst  wave.gtkw
+
+wave_e:
+	gtkwave top_tb.fst  wave_e.gtkw

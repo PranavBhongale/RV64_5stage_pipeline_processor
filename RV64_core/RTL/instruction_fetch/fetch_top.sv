@@ -13,7 +13,6 @@ module fetch_top #(
     input  logic            pc_valid_i,
     output logic            pc_ready_o,
 
-
     // Decode Stage Interface
     output logic [XLEN-1:0] pc_o,
     output logic [31:0]     instruction_o,

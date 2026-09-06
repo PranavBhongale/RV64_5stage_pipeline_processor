@@ -1,23 +1,96 @@
 [*]
 [*] GTKWave Analyzer v3.3.118 (w)1999-2023 BSI
-[*] Thu Aug 20 17:00:44 2026
+[*] Tue Aug 25 15:06:34 2026
 [*]
-[dumpfile] "C:\Users\Netizens\Documents\SV_Project\5StageRV64_processor\top_tb.vcd"
-[dumpfile_mtime] "Thu Aug 20 16:52:45 2026"
-[dumpfile_size] 203718
+[dumpfile] "C:\Users\Netizens\Documents\SV_Project\5StageRV64_processor\top_tb.fst"
+[dumpfile_mtime] "Tue Aug 25 14:17:38 2026"
+[dumpfile_size] 9036
 [savefile] "C:\Users\Netizens\Documents\SV_Project\5StageRV64_processor\wave.gtkw"
 [timestart] 0
-[size] 1000 600
+[size] 1366 697
 [pos] -1 -1
-*-13.000000 9090 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-14.000000 36120 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] top_tb.
-[sst_width] 174
-[signals_width] 182
+[treeopen] top_tb.dut.
+[treeopen] top_tb.dut.execute_stage.
+[treeopen] top_tb.dut.execute_stage.execution_top_M.
+[treeopen] top_tb.dut.execute_stage.fetch_unit.
+[treeopen] top_tb.dut.execute_stage.instruction_decode.
+[sst_width] 262
+[signals_width] 303
 [sst_expanded] 1
-[sst_vpaned_height] 157
+[sst_vpaned_height] 329
 @28
 top_tb.clk
-@23
+@22
 top_tb.dut.load_hazard_rd[4:0]
+top_tb.dut.execute_stage.u_pc_generation.pc[63:0]
+@28
+top_tb.dut.execute_stage.u_pc_generation.pc_valid
+top_tb.dut.execute_stage.u_pc_generation.update_enable
+top_tb.dut.execute_stage.u_pc_generation.branch_taken
+@22
+top_tb.dut.execute_stage.u_pc_generation.pc_target_exe[63:0]
+@28
+top_tb.dut.execute_stage.u_pc_generation.flush
+@420
+top_tb.dut.execute_stage.fetch_unit.u_instruction_memory.current_delay
+@28
+[color] 1
+top_tb.dut.execute_stage.u_pc_generation.fetch_ready
+top_tb.dut.execute_stage.instruction_decode.instruction_decode.ready_o
+top_tb.dut.execute_stage.fetch_unit.u_instruction_fetch_unit.ready_i
+top_tb.dut.execute_stage.execution_top_M.ready_execution_unit
+top_tb.dut.execute_stage.fetch_unit.pc_ready_o
+top_tb.dut.execute_stage.fetch_unit.u_instruction_fetch_unit.imem_req_ready_i
+@22
+[color] 1
+top_tb.dut.execute_stage.fetch_unit.u_instruction_fetch_unit.imem_addr_o[63:0]
+@28
+[color] 1
+top_tb.dut.execute_stage.fetch_unit.u_instruction_fetch_unit.imem_req_valid_o
+[color] 1
+top_tb.dut.execute_stage.fetch_unit.u_instruction_fetch_unit.imem_resp_ready_o
+[color] 1
+top_tb.dut.execute_stage.fetch_unit.u_instruction_fetch_unit.imem_resp_valid_i
+@22
+[color] 2
+top_tb.dut.execute_stage.fetch_unit.u_instruction_fetch_unit.instruction_o[31:0]
+top_tb.dut.execute_stage.fetch_unit.u_instruction_fetch_unit.imem_instruction_i[31:0]
+@28
+[color] 1
+top_tb.dut.execute_stage.fetch_unit.u_instruction_memory.req_ready_o
+[color] 1
+top_tb.dut.execute_stage.fetch_unit.u_instruction_memory.req_valid_i
+top_tb.dut.execute_stage.fetch_unit.u_instruction_memory.responce_ready_i
+top_tb.dut.execute_stage.fetch_unit.u_instruction_memory.responce_valid_o
+@22
+top_tb.dut.execute_stage.fetch_unit.u_instruction_memory.responce_data_o[31:0]
+top_tb.dut.execute_stage.fetch_unit.u_instruction_memory.address_reg[63:0]
+[color] 1
+top_tb.dut.execute_stage.instruction_decode.instruction_decode.instruction_i[31:0]
+[color] 1
+top_tb.dut.execute_stage.instruction_decode.instruction_decode.pc_i[63:0]
+[color] 5
+top_tb.dut.execute_stage.u_pc_generation.pc_from_decode_stage[63:0]
+[color] 5
+top_tb.dut.execute_stage.u_pc_generation.pc_from_execution[63:0]
+@28
+top_tb.dut.execute_stage.instruction_decode.instruction_decode.valid_o
+top_tb.dut.execute_stage.instruction_decode.instruction_decode.valid_i
+@22
+[color] 5
+top_tb.dut.execute_stage.u_pc_generation.pc_target_exe[63:0]
+@28
+top_tb.dut.execute_stage.instruction_decode.flush
+@22
+top_tb.dut.execute_stage.instruction_decode.pc_i[63:0]
+top_tb.dut.execute_stage.instruction_decode.pc_out[63:0]
+@28
+top_tb.dut.execute_stage.instruction_decode.ready_i
+top_tb.dut.execute_stage.instruction_decode.ready_o
+top_tb.dut.execute_stage.instruction_decode.valid_i
+@29
+top_tb.dut.execute_stage.instruction_decode.valid_o
 [pattern_trace] 1
 [pattern_trace] 0

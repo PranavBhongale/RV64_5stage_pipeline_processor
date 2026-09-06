@@ -39,7 +39,7 @@ logic  [XLEN -1 :0 ] pc_target_from_execution ;
 logic [XLEN-1:0] pc_for_pc_generation;
 logic branch_take;
 logic flush ;
-
+logic [XLEN -1 : 0 ]pc_from_decode ;
  pc_generation  #(
      .XLEN(XLEN)
 ) u_pc_generation (
@@ -56,6 +56,7 @@ logic flush ;
     .branch_taken(branch_take),
         // Correction input from execute stage (BTB update key)
      .pc_from_execution(pc_for_pc_generation),
+     .pc_from_decode_stage(pc_from_decode),
     .flush(flush)
 );
 
@@ -124,15 +125,18 @@ decoding_pipeline # (
      // flush the pipeline when branch misprediction occurs
      .flush(flush)
 );
+assign pc_from_decode = pc_out_fetch ;  // to provide for fetch unit
+
+
 
 // connection to execute stage
 
- execution_top #(
+ execution_pipeline  #(
     .XLEN(XLEN)
 ) execution_top_M(
     //Global
-   .clk(clk),
-   .rst_n(rst_n),
+    .clk(clk),
+    .rst_n(rst_n),
     //Handshake from Decode stage
    .valid_decode(decoder_valid),
    .ready_execution_unit(ready_execution),

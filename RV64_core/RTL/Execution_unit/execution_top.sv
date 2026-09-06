@@ -12,9 +12,6 @@ import alu_pkg::*;
 module execution_top #(
     parameter int XLEN = 64
 )(
-    //  Global
-    input  logic clk,
-    input  logic rst_n,
 
     // Handshake from Decode stage
     input  logic                          valid_decode,

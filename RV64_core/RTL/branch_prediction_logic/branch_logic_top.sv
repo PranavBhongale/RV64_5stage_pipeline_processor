@@ -15,7 +15,7 @@ module branch_logic_top #(
     input  logic             update_en,
     input  logic [XLEN-1:0] update_pc,
     input  logic [XLEN-1:0] target_pc,
-    input  logic             branch_taken,
+    input  logic            branch_taken,
 
     // Predicted next PC
     output logic [XLEN-1:0] predicted_pc,
