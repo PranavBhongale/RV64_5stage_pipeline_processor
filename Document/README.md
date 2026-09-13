@@ -10,3 +10,5 @@ The repository also contains dedicated folders for specific parts of the project
 * **Verification** — Testbenches, test programs, and verification-related files.
 
 If you want to understand exactly what this project is and how the processor works, please go through the **Synopsis Report (PDF)** first. It provides a complete overview of the design and explains the major architectural and implementation decisions in detail.
+
+## the link's in the PDF are not working in github pdf is big it is better to download and then read
