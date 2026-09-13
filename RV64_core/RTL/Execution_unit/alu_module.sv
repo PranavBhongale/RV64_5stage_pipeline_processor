@@ -20,7 +20,6 @@ module alu_module #(
     assign a_signed = operand_a;
     assign b_signed = operand_b;
 
-
     logic signed [31:0] result_1;
     logic signed [31:0] result_2;
     logic signed [31:0] result_3;

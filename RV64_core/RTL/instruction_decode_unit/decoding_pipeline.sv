@@ -58,7 +58,6 @@ instruction_decode_top#(
      .reg_write_data_i(reg_write_data_i),
      .reg_write_addr_i(reg_write_addr_i),
 
-
     // To Execute Stage
      .valid_o(valid_reg),
      .ready_i(ready_i),

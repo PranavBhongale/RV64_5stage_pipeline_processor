@@ -25,7 +25,6 @@ module data_memory #(
     output logic             alignment_error_o
 );
 
-
     // Memory Array
     logic [7:0] memory [MEMORY_SIZE];
 

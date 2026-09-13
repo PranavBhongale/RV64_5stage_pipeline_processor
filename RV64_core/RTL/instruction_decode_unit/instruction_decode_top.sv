@@ -19,15 +19,14 @@ module instruction_decode_top #(
 
 
     // To Execute Stage
-     output logic             valid_o,
-     input  logic             ready_i,
+      output logic             valid_o,
+      input  logic             ready_i,
       output decode_pkg:: decoded_instr_t decoded_instr ,
     //  TO  alu
     output alu_pkg::alu_op_t    alu_op_o,
     output logic [XLEN-1:0]     rs1_data,
     output logic [XLEN-1:0]     rs2_data ,
     output logic [XLEN -1 :0]   pc_out
-
 );
 
 instruction_decode u_instruction_decode (
@@ -43,9 +42,6 @@ instruction_decode u_instruction_decode (
     .out_pc         (pc_out)
 
 );
-
-
-
 
 register_file #(
     .XLEN(XLEN)

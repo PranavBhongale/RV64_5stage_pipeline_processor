@@ -16,8 +16,6 @@ module memory_top #(
     input  logic [4:0]       req_rd_i, // destination register address for load instructions
 
 
-
-
     // address to write back unit  for storing load data
     output logic [4:0]       resp_rd_o,
 

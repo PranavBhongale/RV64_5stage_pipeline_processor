@@ -20,7 +20,12 @@
   |         |         |---
   |         |         |---
   |         |
-  |         |----instruction_support /
+  |         |
+  |         |
+  |         |-------------------synopsis report pdf  
+  |         |
+  |         |--------------------|
+  |                              |----instruction_support /
   |                              | 
   |                              |----skipped_instruction /
   |                              |                      |--- RV64_Skipped_Extensions_A_FD_C.pdf // all the instruction

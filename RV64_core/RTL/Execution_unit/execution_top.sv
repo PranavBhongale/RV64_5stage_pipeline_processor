@@ -2,13 +2,6 @@
 import decode_pkg::*;
 import alu_pkg::*;
 
-//  execution_top
-//  Pipeline execution stage:
-//    • Selects ALU operands (register vs immediate / PC)
-//    • Instantiates your existing alu_module
-//    • Resolves branch condition and computes branch/jump target
-//    • Routes result to Memory stage (load/store) or Write-Back stage
-//    • Implements ready/valid handshake on all interfaces
 module execution_top #(
     parameter int XLEN = 64
 )(

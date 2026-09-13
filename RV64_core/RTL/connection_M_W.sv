@@ -6,8 +6,8 @@ module connection_M_W #(
     // clock signal
     input logic clk ,
     input logic rst_n ,
-//    connection to execute stage
-//  to write back stage
+    //    connection to execute stage
+    //  to write back stage
 
     output logic reg_write_en_in ,
     output logic [XLEN-1 : 0 ] reg_write_data_in,
@@ -27,7 +27,6 @@ module connection_M_W #(
     input logic [XLEN-1 :0 ] write_data,
     input logic [4:0] write_reg,
     input logic valid_o_reg,
-
 //  input to load store unit from execute stage
 
     input logic req_valid_memory,

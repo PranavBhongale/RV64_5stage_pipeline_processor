@@ -1,21 +1,20 @@
 [*]
 [*] GTKWave Analyzer v3.3.118 (w)1999-2023 BSI
-[*] Tue Aug 25 15:06:34 2026
+[*] Sat Sep 12 14:01:20 2026
 [*]
 [dumpfile] "C:\Users\Netizens\Documents\SV_Project\5StageRV64_processor\top_tb.fst"
-[dumpfile_mtime] "Tue Aug 25 14:17:38 2026"
-[dumpfile_size] 9036
+[dumpfile_mtime] "Sat Sep 12 12:52:48 2026"
+[dumpfile_size] 10259
 [savefile] "C:\Users\Netizens\Documents\SV_Project\5StageRV64_processor\wave.gtkw"
-[timestart] 0
+[timestart] 196000
 [size] 1366 697
 [pos] -1 -1
-*-14.000000 36120 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-14.000000 208940 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] top_tb.
 [treeopen] top_tb.dut.
 [treeopen] top_tb.dut.execute_stage.
-[treeopen] top_tb.dut.execute_stage.execution_top_M.
-[treeopen] top_tb.dut.execute_stage.fetch_unit.
-[treeopen] top_tb.dut.execute_stage.instruction_decode.
+[treeopen] top_tb.dut.execute_stage.instruction_decode.instruction_decode.
+[treeopen] top_tb.dut.memory_writeback_stage.
 [sst_width] 262
 [signals_width] 303
 [sst_expanded] 1
@@ -51,12 +50,17 @@ top_tb.dut.execute_stage.fetch_unit.u_instruction_fetch_unit.imem_addr_o[63:0]
 top_tb.dut.execute_stage.fetch_unit.u_instruction_fetch_unit.imem_req_valid_o
 [color] 1
 top_tb.dut.execute_stage.fetch_unit.u_instruction_fetch_unit.imem_resp_ready_o
+@29
 [color] 1
 top_tb.dut.execute_stage.fetch_unit.u_instruction_fetch_unit.imem_resp_valid_i
 @22
 [color] 2
 top_tb.dut.execute_stage.fetch_unit.u_instruction_fetch_unit.instruction_o[31:0]
 top_tb.dut.execute_stage.fetch_unit.u_instruction_fetch_unit.imem_instruction_i[31:0]
+@28
+top_tb.dut.execute_stage.fetch_unit.valid_o
+@22
+top_tb.dut.execute_stage.fetch_unit.pc_o[63:0]
 @28
 [color] 1
 top_tb.dut.execute_stage.fetch_unit.u_instruction_memory.req_ready_o
@@ -90,7 +94,28 @@ top_tb.dut.execute_stage.instruction_decode.pc_out[63:0]
 top_tb.dut.execute_stage.instruction_decode.ready_i
 top_tb.dut.execute_stage.instruction_decode.ready_o
 top_tb.dut.execute_stage.instruction_decode.valid_i
-@29
 top_tb.dut.execute_stage.instruction_decode.valid_o
+@22
+top_tb.dut.execute_stage.instruction_decode.instruction_decode.u_register_file.rd_addr[4:0]
+top_tb.dut.execute_stage.instruction_decode.instruction_decode.u_register_file.rd_data[63:0]
+@28
+top_tb.dut.execute_stage.instruction_decode.instruction_decode.u_register_file.reg_write_en
+@22
+top_tb.dut.execute_stage.instruction_decode.instruction_decode.u_register_file.reg_array[1][63:0]
+@28
+top_tb.dut.memory_writeback_stage.memory_1.mem_write_en
+[color] 6
+top_tb.dut.memory_writeback_stage.memory_1.isStore
+@22
+[color] 6
+top_tb.dut.memory_writeback_stage.memory_1.processed_wdata[63:0]
+@28
+[color] 6
+top_tb.dut.memory_writeback_stage.memory_1.req_valid_i
+@22
+[color] 6
+top_tb.dut.memory_writeback_stage.memory_1.req_addr_i[63:0]
+@28
+top_tb.dut.memory_writeback_stage.memory_1.isLoad
 [pattern_trace] 1
 [pattern_trace] 0

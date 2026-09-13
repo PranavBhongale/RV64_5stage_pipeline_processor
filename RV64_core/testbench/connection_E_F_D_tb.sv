@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 
-module connection_E_F_D;
+module connection_E_F_D_tb;
 
 parameter XLEN = 64;
 
